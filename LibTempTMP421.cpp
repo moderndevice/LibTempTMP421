@@ -41,8 +41,7 @@
 	 
 	 /* power the TMP421 Temp Sensor from an Arduino's analog pins
 	  These pin assignments should really be done in the sketch but apparently 
-	  will not work if set after wire.begin is called, because the chip hasn't
-	  been powered.
+	  will not work if set after wire.begin is called.
 	  There may be a C++ solution for this of which I am not aware */
 	  
 	  

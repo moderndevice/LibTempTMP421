@@ -30,8 +30,12 @@ void setup() {
 
 void loop() {
     Serial.print("Temp: ");
-    Serial.print(temp.GetTemperature());
-    Serial.println(" degC");
+    float C = temp.GetTemperature();
+    Serial.print(C);
+    Serial.print(" degC\t");
+    float F = (C * 9.0) / 5.0 + 32.0;                         //  	Multiply by 9, then divide by 5, then add 32
+    Serial.print(F);
+    Serial.println(" degF");
     delay(100);
 }
 
