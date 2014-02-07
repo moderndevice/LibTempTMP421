@@ -41,8 +41,9 @@
 	 
 	 /* power the TMP421 Temp Sensor from an Arduino's analog pins
 	  These pin assignments should really be done in the sketch but apparently 
-	  will not work if set after wire.begin is called.
-	  There may be a C++ solution for this of which I am not aware */
+	  will not work if set after wire.begin is called, because the chip hasn't
+	  been powered.
+	  There may be a C++ solution for this */
 	  
 	  
 	 pinMode(A2, OUTPUT);
@@ -70,10 +71,8 @@ float LibTempTMP421::GetTemperature(void) {
 
     setPtrLoc(0x00);                //high-byte
     in[0] = getRegisterValue();
-    in[0] = getRegisterValue();
 
     setPtrLoc(0x10);                //low-byte
-    in[1] = getRegisterValue();
     in[1] = getRegisterValue();
     in[1] >>=4;                     //shift-off the unused bits
 	
