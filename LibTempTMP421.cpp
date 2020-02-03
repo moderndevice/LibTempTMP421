@@ -6,7 +6,8 @@
 
   code by Christopher Ladden 2009. 
   revised Paul Badger 2012
-  
+  revised Paul Badger 2019
+  added init function, added I2C addresses
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -35,28 +36,21 @@
 /**
  * Initialize the sensor based on the specified type.
  */
- LibTempTMP421::LibTempTMP421(uint8_t TempSensorType) {
-	 
-
-	 
-	 /* power the TMP421 Temp Sensor from an Arduino's analog pins
-	  These pin assignments should really be done in the sketch but apparently 
-	  will not work if set after wire.begin is called, because the chip hasn't
-	  been powered.
-	  There may be a C++ solution for this */
-	  
-	  
-	 pinMode(A2, OUTPUT);
-	 digitalWrite(A2, LOW);       // GND pin
-	 pinMode(A3, OUTPUT);
-	 digitalWrite(A3, HIGH);      // VCC pin
-
-    Wire.begin();
+ LibTempTMP421::LibTempTMP421(uint8_t TempSensorType,uint8_t I2Caddress) {
+  
+     LibTempTMP421::I2C_address = I2Caddress;
 }
 
 /******************************************************************************
  * Global Functions
  ******************************************************************************/
+
+/* Init wire.begin here to allow sensor to be powered up from
+ pins before it's initialized */
+
+void LibTempTMP421::Init(){
+    Wire.begin();
+}
 
 /**********************************************************
  * GetTemperature
@@ -71,8 +65,10 @@ float LibTempTMP421::GetTemperature(void) {
 
     setPtrLoc(0x00);                //high-byte
     in[0] = getRegisterValue();
+    in[0] = getRegisterValue();
 
     setPtrLoc(0x10);                //low-byte
+    in[1] = getRegisterValue();
     in[1] = getRegisterValue();
     in[1] >>=4;                     //shift-off the unused bits
 	
@@ -109,7 +105,7 @@ float LibTempTMP421::GetTemperature(void) {
  **********************************************************/
 uint8_t LibTempTMP421::getRegisterValue(void) {
 
-    Wire.requestFrom(0x2A, 1);
+    Wire.requestFrom(I2C_address, 1);
     while(Wire.available() <= 0) {
       ; //wait
     }
@@ -126,7 +122,7 @@ uint8_t LibTempTMP421::getRegisterValue(void) {
 void LibTempTMP421::setPtrLoc(uint8_t ptrLoc) {
 
     //Set the pointer location
-    Wire.beginTransmission(0x2A);   //begin
+    Wire.beginTransmission(I2C_address);   //begin
     Wire.write(ptrLoc);             //send the pointer location
     Wire.endTransmission();         //end
     delay(8);

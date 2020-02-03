@@ -5,6 +5,7 @@
     TMP421-Breakout Module - http://www.moderndevice.com/products/tmp421-temperature-sensor
 
   Created by Christopher Ladden at Modern Device on December 2009.
+  Modified Paul Badger 2012, 2020
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -33,7 +34,9 @@ class LibTempTMP421
     void setPtrLoc(uint8_t ptrLoc);
 
   public:
-    LibTempTMP421(uint8_t TempSensorType);
+    uint8_t I2C_address;
+    LibTempTMP421(uint8_t TempSensorType,uint8_t I2Caddress);
+    void Init();
     float GetTemperature(void);
 };
 
